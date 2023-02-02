@@ -1,7 +1,15 @@
+"""
+Note: When dumping it doesn't seem to care about the order of the first keys, but I don't
+consider this a problem for now, so I won't fix it.
+"""
 from src.line import Line
 
 
 class Gitconfig:
+    config_path: str = ""
+    data: dict = {}
+    regions: list = []
+
     def __init__(self, config_path: str):
         """Handler for Gitconfig files
 
@@ -9,7 +17,7 @@ class Gitconfig:
         """
         self.config_path = config_path
 
-    def parse(self, config: str):
+    def parse(self, config: str) -> dict:
         """Parse text from a gitconfig file"""
         raw_lines: list = config.splitlines()
 
@@ -19,12 +27,15 @@ class Gitconfig:
             # Pycharm doesn't detect that it's a string
             raw_line: str = raw_line
             line = Line(raw_line)
-            print("Raw line: ", raw_line)
+
+            # Check whether the line is a region or not
             if line.is_region():
                 # Element is a region like:
                 # [core]
-                print("Element is a region.")
                 result[raw_line]: dict = {}
+
+                # Append to the region list
+                self.regions.append(raw_line)
 
                 # Set last region
                 last_region = raw_line
@@ -32,17 +43,12 @@ class Gitconfig:
                 # Element is a statement, like:
                 #         url = git@github.com:Perseverancia-company/sub.gitconfig.git
                 # (Yes they have tabs of 8 spaces)
-                print("Element is not a region.")
 
                 # Remove whitespace
                 line_text = raw_line.strip()
-                print("Line stripped: ", line_text)
+
                 # Limit it to 1 just in case
                 key, value = line_text.split(" = ", 1)
-                print("Key: ", key)
-                print("Its length: ", len(key))
-                print("Value: ", value)
-                print("Its length: ", len(value))
 
                 if last_region:
                     # Insert it on the last_region zone
@@ -50,18 +56,41 @@ class Gitconfig:
                 else:
                     # If there's no last_region, then insert it raw
                     result[key] = value
-
-            print("\n")
         return result
 
     def loads(self) -> dict:
         """Converts a gitconfig file to a dictionary file"""
         with open(self.config_path) as f:
             raw_config: str = f.read()
-        return self.parse(raw_config)
+        self.data = self.parse(raw_config)
+        return self.data
+
+    def encode(self, data: dict, inside_region: bool = False) -> str:
+        """Encode a config dictionary"""
+        result: str = ""
+        for key in list(data.keys()):
+            line = Line(key)
+
+            # Check if it's a region or not
+            if line.is_region():
+                # Add and continue
+                result += f"{key}\n"
+
+                # Recurse over every field
+                result += self.encode(data[key], inside_region=True)
+            elif inside_region:
+                # Add with whitespace
+                result += f"{str(' ' * 8)}{key} = {str(data[key])}\n"
+            else:
+                # Add without whitespace
+                result += f"{key} = {str(data[key])}\n"
+        return result
 
     def dumps(self):
-        """Converts a dictionary to a gitconfig file
+        """Dump encoded gitconfig dictionary
 
-        It must be the same format as the one returned from loads"""
-
+        It uses the given path on instantiation"""
+        gitconfig = self.encode(self.data)
+        with open(self.config_path, "w") as f:
+            f.write(gitconfig)
+        return gitconfig

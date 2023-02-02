@@ -1,0 +1,15 @@
+[core]
+        repositoryformatversion = 0
+        filemode = true
+        bare = false
+        logallrefupdates = true
+        new_field = Hello there
+[remote "origin"]
+        url = git@github.com:Perseverancia-company/sub.gitconfig.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        new_field = Hello there
+[branch "main"]
+        remote = origin
+        merge = refs/heads/main
+        new_field = Hello there
+new_field = something
