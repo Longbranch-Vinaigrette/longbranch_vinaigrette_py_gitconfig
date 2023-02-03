@@ -17,6 +17,17 @@ class Gitconfig:
         """
         self.config_path = config_path
 
+    def has_submodules(self):
+        """Check whether the repository uses submodules or not"""
+        if not self.data:
+            self.loads()
+
+        for key in list(self.data.keys()):
+            line = Line(key)
+            if line.is_submodule():
+                return True
+        return False
+
     def parse(self, config: str) -> dict:
         """Parse text from a gitconfig file"""
         raw_lines: list = config.splitlines()
@@ -86,11 +97,17 @@ class Gitconfig:
                 result += f"{key} = {str(data[key])}\n"
         return result
 
-    def dumps(self):
+    def dumps(self, path: str = ""):
         """Dump encoded gitconfig dictionary
 
         It uses the given path on instantiation"""
         gitconfig = self.encode(self.data)
-        with open(self.config_path, "w") as f:
-            f.write(gitconfig)
+        if not path:
+            # Use the given path on instantiation
+            with open(self.config_path, "w") as f:
+                f.write(gitconfig)
+        else:
+            # Use the given path on function call
+            with open(path, "w") as f:
+                f.write(gitconfig)
         return gitconfig

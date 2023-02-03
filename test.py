@@ -11,8 +11,9 @@ config.data["new_field"] = "something"
 
 # Add a new field to every 'region'
 for region in config.regions:
-    print("Adding new_field to: ", region)
     config.data[region]["new_field"] = "Hello there"
 
-print("Encoded gitconfig: ")
-print(config.dumps())
+# Are there submodules?
+config.has_submodules()
+
+config.dumps(f"{os.getcwd()}/.gitresult")
