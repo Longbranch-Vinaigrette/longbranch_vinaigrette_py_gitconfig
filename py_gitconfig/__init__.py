@@ -2,6 +2,8 @@
 Note: When dumping it doesn't seem to care about the order of the first keys, but I don't
 consider this a problem for now, so I won't fix it.
 """
+import os
+
 from .line import Line
 
 
@@ -15,7 +17,23 @@ class Gitconfig:
 
         :param config_path: The path to .git/config or .gitmodules
         """
-        self.config_path = config_path
+        # Check if it's a file, if it's set it raw
+        if os.path.isfile(config_path):
+            self.config_path = config_path
+        else:
+            # If it's a repository path then let's retrieve the config file
+            git_folder = f"{config_path}{os.path.sep}.git"
+            if os.path.isdir(git_folder):
+                print("Is a git repository")
+                # It's a repository
+                actual_config_path = f"{config_path}{os.path.sep}" \
+                                      f".git{os.path.sep}" \
+                                      "config"
+                self.config_path = actual_config_path
+            else:
+                # It's not a repository, raise exception
+                raise Exception("Error: The given path is not a git config file "
+                                "nor a repository.")
 
     def get_submodules_relative_path(self) -> list:
         """Get relative path"""
@@ -27,7 +45,6 @@ class Gitconfig:
                 submodules_paths.append(self.data[key]["path"])
         
         return submodules_paths
-
 
     def has_submodules(self) -> bool:
         """Check whether the repository uses submodules or not"""
