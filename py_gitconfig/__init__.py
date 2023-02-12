@@ -17,7 +17,19 @@ class Gitconfig:
         """
         self.config_path = config_path
 
-    def has_submodules(self):
+    def get_submodules_relative_path(self) -> list:
+        """Get relative path"""
+        submodules_paths: list = []
+        for key in list(self.data.keys()):
+            line = Line(key)
+            if line.is_submodule():
+                # This is a submodule
+                submodules_paths.append(self.data[key]["path"])
+        
+        return submodules_paths
+
+
+    def has_submodules(self) -> bool:
         """Check whether the repository uses submodules or not"""
         if not self.data:
             self.loads()

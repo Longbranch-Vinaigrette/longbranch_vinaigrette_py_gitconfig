@@ -17,3 +17,10 @@ for region in config.regions:
 config.has_submodules()
 
 config.dumps(f"{os.getcwd()}/.gitresult")
+
+# Gitmodules
+config = Gitconfig(f"{os.getcwd()}{os.path.sep}.gitmodules-example")
+print("\n\nGit modules data: \n")
+pprint.pprint(config.loads())
+print("\nSubmodules paths: ")
+pprint.pprint(config.get_submodules_relative_path())
