@@ -1,0 +1,15 @@
+[submodule "python_app_manager/longbranch_vinaigrette_py_desktop_entry"]
+	path = python_app_manager/longbranch_vinaigrette_py_desktop_entry
+	url = git@github.com:Longbranch-Vinaigrette/longbranch_vinaigrette_py_desktop_entry.git
+[submodule "python_app_manager/longbranch_vinaigrette_py_gitconfig"]
+	path = python_app_manager/longbranch_vinaigrette_py_gitconfig
+	url = git@github.com:Longbranch-Vinaigrette/longbranch_vinaigrette_py_gitconfig.git
+[submodule "python_app_manager/longbranch_vinaigrette_py_process_utils"]
+	path = python_app_manager/longbranch_vinaigrette_py_process_utils
+	url = git@github.com:Longbranch-Vinaigrette/longbranch_vinaigrette_py_process_utils.git
+[submodule "python_app_manager/longbranch_vinaigrette_py_repository_discovery"]
+	path = python_app_manager/longbranch_vinaigrette_py_repository_discovery
+	url = git@github.com:Longbranch-Vinaigrette/longbranch_vinaigrette_py_repository_discovery.git
+[submodule "python_app_manager/longbranch_vinaigrette_py_repository_configuration"]
+	path = python_app_manager/longbranch_vinaigrette_py_repository_configuration
+	url = git@github.com:Longbranch-Vinaigrette/longbranch_vinaigrette_py_repository_configuration.git

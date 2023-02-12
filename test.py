@@ -24,3 +24,10 @@ print("\n\nGit modules data: \n")
 pprint.pprint(config.loads())
 print("\nSubmodules paths: ")
 pprint.pprint(config.get_submodules_relative_path())
+
+# Gitmodules
+config = Gitconfig(f"{os.getcwd()}{os.path.sep}.gitmodules-example2")
+print("\n\nGit modules data: \n")
+pprint.pprint(config.loads())
+print("\nSubmodules paths: ")
+pprint.pprint(config.get_submodules_relative_path())
