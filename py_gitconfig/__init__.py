@@ -38,11 +38,19 @@ class Gitconfig:
     def get_submodules_relative_path(self) -> list:
         """Get relative path"""
         submodules_paths: list = []
+        self.data = self.loads()
         for key in list(self.data.keys()):
             line = Line(key)
             if line.is_submodule():
-                # This is a submodule
-                submodules_paths.append(self.data[key]["path"])
+                try:
+                    # This is a submodule
+                    submodules_paths.append(self.data[key]["path"])
+                except:
+                    print("Warning: A submodule was found, but not its relative path, "
+                          "it's likely that you provided the information on "
+                          "./.git/config, but this file doesn't have the relative "
+                          "paths of submodules, the one you need to provide is: "
+                          "./.gitmodules")
         
         return submodules_paths
 
